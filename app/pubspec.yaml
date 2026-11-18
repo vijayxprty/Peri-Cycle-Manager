@@ -1,0 +1,52 @@
+name: peribuds
+description: "PeriBuds — period tracker and diet companion, fully offline."
+publish_to: 'none'
+version: 1.0.6+7
+
+environment:
+  sdk: ^3.9.2
+  flutter: ">=3.35.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  shared_preferences: ^2.5.3
+  intl: ^0.20.2
+  flutter_local_notifications: ^19.4.0
+  timezone: ^0.10.1
+  flutter_timezone: ^4.1.1
+  pdf: ^3.11.3
+  share_plus: ^11.0.0
+  path_provider: ^2.1.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+# image 4.11.0 (via pdf) calls ZLibDecoder.decodeLazy, which archive 4.0.x
+# no longer provides. image 4.5.4 uses decodeBytes instead, so pin to it.
+dependency_overrides:
+  image: 4.5.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icon-master.webp
+  fonts:
+    # Real static weights, instantiated from the Outfit variable font
+    # (google/fonts, OFL) — v1.0.0 bundled one regular file only, so every
+    # w700/w800 heading rendered thin. Do not go back to a single file.
+    - family: Outfit
+      fonts:
+        - asset: assets/fonts/Outfit-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Outfit-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Outfit-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Outfit-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Outfit-ExtraBold.ttf
+          weight: 800

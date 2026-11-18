@@ -1,0 +1,37 @@
+# Flutter / Dart
+**/build/
+.dart_tool/
+.idea/
+*.iml
+.pub-cache/
+.pub/
+*.log
+
+# Android
+**/.gradle/
+app/android/app/*.jks
+app/android/app/*.keystore
+app/android/key.properties
+app/android/local.properties
+app/android/gradle/wrapper/gradle-wrapper.jar
+app/android/app/build/
+
+# iOS / macOS
+**/Pods/
+**/DerivedData/
+**/*.xcworkspace/xcuserdata/
+**/*.xcodeproj/xcuserdata/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+macos/Flutter/GeneratedPluginRegistrant.swift
+macos/Flutter/ephemeral/
+
+# Secrets — never commit
+*.keystore
+*.jks
+key.properties
+local.properties
+
+# OS
+.DS_Store
+Thumbs.db
