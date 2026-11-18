@@ -16,7 +16,7 @@ you can share with your doctor. No account, no cloud, no ads.
 
 ## Download
 
-- **Android:** [peribuds-1.0.6.apk](peribuds-1.0.6.apk) — install right over any earlier version, your data stays.
+- **Android:** [peribuds-1.0.6.apk](https://github.com/vijayxprty/peribuds/releases/download/v1.0.6/peribuds-1.0.6.apk) — install right over any earlier version, your data stays.
   Or visit the landing page: https://vijayxprty.github.io/peribuds/
 - **iPhone:** the .ipa is built on a Mac (`flutter build ipa --no-codesign`) and will be added here for sideloading.
 
