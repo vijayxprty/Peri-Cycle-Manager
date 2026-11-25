@@ -286,7 +286,7 @@ class _StepsScreenState extends State<StepsScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'The phone counts steps automatically. The display advances in 8-step increments. There are no manual add or remove controls.',
+                'The phone counts steps automatically after you allow activity access. Steps from earlier that day may not be included. The display advances in 8-step increments; there are no manual add or remove controls.',
                 style: TextStyle(fontSize: 12, height: 1.5, color: PB.softText),
               ),
             ],
