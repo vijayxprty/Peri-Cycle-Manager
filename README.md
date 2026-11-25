@@ -18,6 +18,7 @@ PeriBuds is a free, fully offline period and wellbeing tracker for Android and i
 
 ## Releases
 
+- **Android APK v1.1.0:** [PeriBuds-v1.1.0.apk](https://github.com/vijayxprty/Peri-Cycle-Manager/releases/download/v1.1.0/PeriBuds-v1.1.0.apk)
 - [Release notes](https://github.com/vijayxprty/Peri-Cycle-Manager/releases)
 
 ## Existing PeriBuds features
