@@ -1,246 +1,300 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PeriBuds — Your period, predicted gently</title>
-<meta name="description" content="PeriBuds is a free, fully offline period tracker for Android and iOS. Periods, ovulation and fertile window, diet charts with reminders, and reports you can share with your doctor. No account, no cloud, no ads.">
-<meta name="theme-color" content="#C24E64">
-<link rel="icon" href="icon.png" type="image/png">
-<style>
-  :root{
-    --ink:#3D2C33; --muted:#7A5C66; --bg:#FDF6F7; --card:#ffffff;
-    --rose:#C24E64; --rose-deep:#6D152E; --rose-soft:#FBE9EC; --rose-light:#F7D9DE;
-    --lav:#B79CED; --lav-soft:#F1EBFD; --sage:#7BA889; --sage-soft:#E9F3EC;
-    --gold:#E8A33D; --gold-soft:#FDF3E0;
-    --line:#F0DDE1; --radius:20px;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
-  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    background:var(--bg); color:var(--ink); line-height:1.55; -webkit-text-size-adjust:100%;}
-  img{max-width:100%; display:block;}
-  a{color:var(--rose);}
-  .wrap{max-width:920px; margin:0 auto; padding:0 20px;}
-
-  .topbar{position:sticky; top:0; z-index:50; background:rgba(253,246,247,.94);
-    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);}
-  .topbar .wrap{display:flex; align-items:center; gap:10px; padding-top:10px; padding-bottom:10px;}
-  .brand{display:flex; align-items:center; gap:9px; text-decoration:none; color:var(--ink);
-    font-weight:800; font-size:20px; letter-spacing:.2px;}
-  .brand img{width:34px; height:34px; border-radius:9px;}
-  .topbar .spacer{flex:1;}
-  .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px;
-    border-radius:999px; padding:11px 20px; font-weight:700; font-size:15px; text-decoration:none;
-    border:2px solid transparent; cursor:pointer; transition:transform .08s ease, box-shadow .08s ease;}
-  .btn:active{transform:scale(.97);}
-  .btn-primary{background:var(--rose); color:#fff; box-shadow:0 6px 16px rgba(194,78,100,.35);}
-  .btn-ghost{background:#fff; color:var(--ink); border-color:var(--line);}
-  .btn-sm{padding:8px 15px; font-size:14px;}
-
-  .hero{text-align:center; padding:44px 0 10px;}
-  .hero-art{width:190px; max-width:58vw; margin:0 auto 6px; border-radius:28px;
-    box-shadow:0 14px 34px rgba(109,21,46,.28);}
-  .hero h1{font-size:clamp(34px,7vw,52px); line-height:1.12; letter-spacing:-.5px; margin:8px 0 10px;}
-  .hero h1 .accent{color:var(--rose);}
-  .hero p.sub{font-size:clamp(17px,3.4vw,20px); color:var(--muted); max-width:600px; margin:0 auto 20px;}
-  .badges{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:0 0 22px;}
-  .badge{background:#fff; border:1px solid var(--line); border-radius:999px; padding:6px 13px;
-    font-size:13.5px; font-weight:600; color:var(--muted);}
-  .hero-cta{display:flex; flex-wrap:wrap; gap:12px; justify-content:center;}
-  .hero-cta .btn{padding:15px 28px; font-size:17px;}
-  .version-line{margin-top:14px; font-size:13.5px; color:var(--muted);}
-  .version-line b{color:var(--ink);}
-
-  section{padding:44px 0 6px;}
-  h2{font-size:clamp(24px,5vw,30px); letter-spacing:-.3px; text-align:center; margin-bottom:8px;}
-  .section-sub{text-align:center; color:var(--muted); max-width:600px; margin:0 auto 24px; font-size:16px;}
-
-  .grid{display:grid; grid-template-columns:1fr; gap:14px;}
-  @media (min-width:640px){ .grid{grid-template-columns:1fr 1fr;} }
-  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
-    padding:20px; display:flex; gap:14px; align-items:flex-start;}
-  .card .art{width:64px; height:64px; flex:none; border-radius:16px; display:flex;
-    align-items:center; justify-content:center; font-size:30px;}
-  .card h3{font-size:17.5px; margin-bottom:4px;}
-  .card p{font-size:14.5px; color:var(--muted);}
-  .card:nth-child(1) .art{background:var(--rose-soft);}
-  .card:nth-child(2) .art{background:var(--lav-soft);}
-  .card:nth-child(3) .art{background:var(--sage-soft);}
-  .card:nth-child(4) .art{background:var(--gold-soft);}
-  .card:nth-child(5) .art{background:var(--rose-soft);}
-  .card:nth-child(6) .art{background:var(--lav-soft);}
-  .card:nth-child(7) .art{background:var(--sage-soft);}
-  .card:nth-child(8) .art{background:var(--gold-soft);}
-
-  .band{background:linear-gradient(135deg,#C24E64,#6D152E); color:#fff; border-radius:var(--radius);
-    padding:24px 22px; display:flex; flex-wrap:wrap; gap:16px; align-items:center; justify-content:space-between;}
-  .band p{font-size:18px; font-weight:700; line-height:1.4;}
-  .band p span{display:block; font-size:14px; font-weight:500; opacity:.92; margin-top:3px;}
-  .band .btn{background:#fff; color:var(--rose); border-color:#fff; white-space:nowrap;}
-
-  .steps{counter-reset:step; display:grid; gap:12px; max-width:640px; margin:0 auto;}
-  .step{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px 18px 16px 62px;
-    position:relative; font-size:15.5px;}
-  .step b{display:block; font-size:16px; margin-bottom:2px;}
-  .step span{color:var(--muted); font-size:14.5px;}
-  .step::before{counter-increment:step; content:counter(step); position:absolute; left:16px; top:16px;
-    width:32px; height:32px; border-radius:50%; background:var(--rose); color:#fff; font-weight:800;
-    display:flex; align-items:center; justify-content:center; font-size:16px;}
-  .fineprint{max-width:640px; margin:16px auto 0; font-size:13.5px; color:var(--muted); text-align:center;}
-
-  .faq{max-width:680px; margin:0 auto; display:grid; gap:10px;}
-  .faq details{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:15px 18px;}
-  .faq summary{font-weight:700; font-size:15.5px; cursor:pointer; list-style:none;}
-  .faq summary::-webkit-details-marker{display:none;}
-  .faq p{margin-top:8px; font-size:14.5px; color:var(--muted);}
-
-  .final{text-align:center; padding:48px 0 10px;}
-  .final .btn{padding:15px 30px; font-size:17px;}
-  footer{border-top:1px solid var(--line); margin-top:48px; padding:26px 0 40px; text-align:center;
-    font-size:14.5px; color:var(--muted);}
-  footer .love{font-size:16px; color:var(--ink); font-weight:600; margin-bottom:6px;}
-  footer .love .heart{color:#e11d48;}
-  footer a{font-weight:600; text-decoration:none;}
-  footer a:hover{text-decoration:underline;}
-  footer .foot-links{margin:10px 0; display:flex; gap:18px; justify-content:center; flex-wrap:wrap;}
-  footer .tiny{font-size:12.5px; margin-top:10px;}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff8f6">
+  <meta name="description" content="PeriBuds is a private, offline cycle and wellbeing tracker with period predictions, steps, water, meal reminders, and reports. Download the Android APK.">
+  <meta property="og:title" content="PeriBuds — your cycle, your rhythm">
+  <meta property="og:description" content="A gentle cycle and wellbeing companion. Free, private, and made for your phone.">
+  <meta property="og:image" content="icon.png">
+  <title>PeriBuds — your cycle, your rhythm</title>
+  <link rel="icon" href="icon.png" type="image/png">
+  <style>
+    @font-face { font-family: Outfit; src: url("app/assets/fonts/Outfit-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+    @font-face { font-family: Outfit; src: url("app/assets/fonts/Outfit-Medium.ttf") format("truetype"); font-weight: 500; font-display: swap; }
+    @font-face { font-family: Outfit; src: url("app/assets/fonts/Outfit-SemiBold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+    @font-face { font-family: Outfit; src: url("app/assets/fonts/Outfit-Bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
+    @font-face { font-family: Outfit; src: url("app/assets/fonts/Outfit-ExtraBold.ttf") format("truetype"); font-weight: 800; font-display: swap; }
+    :root {
+      --rose: #c24e64;
+      --rose-dark: #93334a;
+      --rose-pale: #fff0ee;
+      --rose-light: #fbd9d6;
+      --paper: #fff8f6;
+      --ink: #3d2c33;
+      --body: #6e5560;
+      --muted: #9a828b;
+      --lav: #ede7fa;
+      --lav-deep: #7d67b2;
+      --water: #eaf6fb;
+      --water-deep: #418bb5;
+      --line: #f1e4e1;
+      --white: #fff;
+      --shadow: 0 24px 70px rgba(95, 44, 57, .13);
+      --font: Outfit, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a:focus-visible, summary:focus-visible { outline: 3px solid var(--lav-deep); outline-offset: 4px; }
+    .shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    .topbar { height: 76px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-weight: 800; font-size: 20px; letter-spacing: -.4px; }
+    .brand img { width: 39px; height: 39px; object-fit: cover; border-radius: 13px; box-shadow: 0 5px 16px rgba(194, 78, 100, .2); }
+    .top-link { color: var(--body); text-decoration: none; font-size: 14px; font-weight: 600; margin-right: 24px; }
+    .button { min-height: 49px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 0; border-radius: 15px; padding: 0 20px; background: var(--rose); color: #fff; font: 700 15px var(--font); text-decoration: none; box-shadow: 0 8px 19px rgba(194, 78, 100, .24); transition: transform .18s ease, box-shadow .18s ease; }
+    .button:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(194, 78, 100, .3); }
+    .button-light { background: #fff; color: var(--rose-dark); border: 1px solid var(--line); box-shadow: none; }
+    .button-light:hover { box-shadow: 0 8px 20px rgba(95, 44, 57, .1); }
+    .hero { min-height: 635px; display: grid; grid-template-columns: 1.03fr .97fr; align-items: center; gap: 48px; padding: 42px 0 70px; }
+    .hero-copy { max-width: 575px; padding: 0 0 20px 12px; }
+    .release-pill { width: fit-content; display: flex; align-items: center; gap: 8px; border: 1px solid #f0dadc; border-radius: 999px; background: rgba(255,255,255,.76); padding: 7px 12px 7px 8px; color: var(--body); font-size: 12px; font-weight: 600; }
+    .release-pill span { border-radius: 999px; padding: 3px 8px; background: var(--rose-pale); color: var(--rose-dark); font-size: 10px; font-weight: 800; letter-spacing: .3px; }
+    h1 { max-width: 600px; margin: 24px 0 17px; font-size: clamp(48px, 6.3vw, 76px); line-height: .99; letter-spacing: -3.6px; font-weight: 800; }
+    .hero-copy > p { max-width: 500px; margin: 0; color: var(--body); font-size: 18px; line-height: 1.65; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 27px; }
+    .quiet-facts { display: flex; flex-wrap: wrap; gap: 17px; margin-top: 21px; color: var(--muted); font-size: 12px; font-weight: 600; }
+    .quiet-facts span { display: inline-flex; align-items: center; gap: 6px; }
+    .quiet-facts b { color: var(--rose); font-size: 15px; }
+    .hero-stage { min-height: 505px; position: relative; display: grid; place-items: center; isolation: isolate; }
+    .bloom { position: absolute; z-index: -2; width: min(440px, 91%); aspect-ratio: 1; border-radius: 49% 51% 46% 54%; background: radial-gradient(circle at 50% 44%, #ffe9e6 0 30%, #f9d9e2 59%, #eadcf6 100%); transform: rotate(-8deg); }
+    .bloom::before, .bloom::after { content: ""; position: absolute; border-radius: 50%; background: rgba(255,255,255,.36); }
+    .bloom::before { width: 28%; aspect-ratio: 1; left: -3%; top: 19%; }
+    .bloom::after { width: 18%; aspect-ratio: 1; right: 0; bottom: 14%; }
+    .spark { position: absolute; color: var(--rose); font-size: 22px; }
+    .spark.one { top: 12%; right: 16%; transform: rotate(12deg); }
+    .spark.two { bottom: 14%; left: 8%; color: var(--lav-deep); font-size: 17px; }
+    .phone { width: 276px; min-height: 490px; position: relative; padding: 12px; border: 7px solid #49313a; border-radius: 39px; background: #fff; box-shadow: 0 28px 58px rgba(61,44,51,.24); transform: rotate(3deg); }
+    .phone::before { content: ""; position: absolute; top: 8px; left: 50%; width: 65px; height: 15px; border-radius: 99px; background: #49313a; transform: translateX(-50%); }
+    .phone-screen { min-height: 452px; overflow: hidden; border-radius: 25px; background: #fffaf8; padding: 18px 14px 12px; }
+    .phone-status { height: 14px; display: flex; justify-content: space-between; margin: 0 2px 17px; color: #604c54; font-size: 9px; font-weight: 700; }
+    .phone-brand { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 13px; font-weight: 800; }
+    .phone-brand img { width: 27px; height: 27px; border-radius: 9px; vertical-align: middle; margin-right: 6px; }
+    .tiny-heart { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 50%; background: var(--rose-light); color: var(--rose); }
+    .phone-greeting { font-size: 18px; font-weight: 800; letter-spacing: -.4px; line-height: 1.18; }
+    .phone-greeting small { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; font-weight: 500; letter-spacing: 0; }
+    .cycle-card { margin-top: 14px; padding: 14px 12px 12px; border-radius: 19px; background: linear-gradient(140deg,#ffe8d9,#ffd9e2 48%,#ede7fa); }
+    .cycle-top { display: flex; align-items: center; justify-content: space-between; color: var(--body); font-size: 9px; font-weight: 700; }
+    .cycle-orbit { width: 123px; height: 123px; margin: 8px auto 7px; display: grid; place-items: center; border-radius: 50%; background: conic-gradient(#d86c80 0 29%, #fff 29% 31%, rgba(255,255,255,.72) 31% 100%); box-shadow: 0 3px 15px rgba(146, 70, 93, .1); }
+    .cycle-core { width: 97px; height: 97px; display: grid; align-content: center; justify-items: center; border-radius: 50%; background: #fff; text-align: center; }
+    .cycle-core small { color: var(--muted); font-size: 8px; }
+    .cycle-core strong { color: var(--rose); font-size: 13px; line-height: 1.3; }
+    .cycle-core b { font-size: 9px; }
+    .phone-caption { text-align: center; color: var(--body); font-size: 9px; }
+    .mini-wellbeing { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+    .mini-card { min-height: 82px; padding: 10px; border-radius: 15px; background: var(--rose-pale); }
+    .mini-card.water { background: var(--water); }
+    .mini-label { display: flex; align-items: center; gap: 4px; color: var(--body); font-size: 9px; font-weight: 700; }
+    .mini-number { display: block; margin-top: 6px; font-size: 16px; font-weight: 800; line-height: 1.1; }
+    .mini-hint { display: block; margin-top: 3px; color: var(--muted); font-size: 8px; }
+    .phone-note { margin-top: 9px; padding: 8px 10px; border-radius: 12px; background: var(--lav); color: #66577d; font-size: 9px; }
+    .phone-dock { height: 39px; display: flex; align-items: end; justify-content: space-around; margin: 8px -2px 0; color: var(--muted); font-size: 8px; }
+    .dock-home { width: 39px; height: 39px; margin-bottom: 3px; display: grid; place-items: center; border: 3px solid #fffaf8; border-radius: 50%; background: var(--rose); color: white; font-size: 18px; box-shadow: 0 4px 10px rgba(194,78,100,.3); }
+    .section { padding: 74px 0; }
+    .section-head { max-width: 680px; margin: 0 auto 34px; text-align: center; }
+    .section-head h2 { margin: 0; font-size: clamp(32px, 4.4vw, 48px); line-height: 1.08; letter-spacing: -1.7px; }
+    .section-head p { margin: 13px auto 0; color: var(--body); font-size: 16px; }
+    .feature-board { padding: 47px 0 55px; background: #fff; border-top: 1px solid #f7eae7; border-bottom: 1px solid #f7eae7; }
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; }
+    .feature { min-height: 205px; padding: 21px 20px; border: 1px solid var(--line); border-radius: 22px; background: #fffdfa; }
+    .feature-mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 14px; background: var(--rose-pale); color: var(--rose); font-size: 20px; }
+    .feature:nth-child(2) .feature-mark, .feature:nth-child(5) .feature-mark { background: var(--lav); color: var(--lav-deep); }
+    .feature:nth-child(3) .feature-mark { background: var(--water); color: var(--water-deep); }
+    .feature:nth-child(4) .feature-mark { background: #eaf4ed; color: #47765a; }
+    .feature h3 { margin: 17px 0 6px; font-size: 18px; letter-spacing: -.3px; }
+    .feature p { margin: 0; color: var(--body); font-size: 13px; line-height: 1.55; }
+    .split { display: grid; grid-template-columns: .9fr 1.1fr; align-items: center; gap: 70px; }
+    .split-art { min-height: 275px; display: grid; place-items: center; border-radius: 30px; background: radial-gradient(circle at 34% 35%,#fff 0 13%,transparent 13.5%), linear-gradient(135deg,#fce4e2,#f0eafb); overflow: hidden; }
+    .big-water { width: 118px; height: 156px; position: relative; display: grid; place-items: center; border: 6px solid rgba(65,139,181,.52); border-radius: 20px 20px 31px 31px; background: rgba(255,255,255,.76); color: var(--water-deep); font-size: 21px; font-weight: 800; box-shadow: 0 17px 35px rgba(65,139,181,.18); transform: rotate(-7deg); }
+    .big-water::before { content: ""; position: absolute; left: -9px; right: -9px; bottom: 24px; height: 36px; border-radius: 45% 55% 0 0; background: #bce7f4; opacity: .85; }
+    .big-water span { position: relative; z-index: 1; }
+    .split-copy h2 { margin: 0 0 12px; font-size: clamp(30px, 4vw, 43px); line-height: 1.08; letter-spacing: -1.4px; }
+    .split-copy p { color: var(--body); font-size: 16px; }
+    .split-copy ul { display: grid; gap: 8px; margin: 19px 0 0; padding: 0; list-style: none; color: var(--body); font-size: 14px; }
+    .split-copy li::before { content: "✓"; display: inline-block; width: 24px; color: var(--rose); font-weight: 800; }
+    .steps-section { background: var(--lav); }
+    .steps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .install-step { padding: 22px; border-radius: 21px; background: rgba(255,255,255,.76); }
+    .install-step span { display: block; color: var(--lav-deep); font-size: 12px; font-weight: 800; }
+    .install-step h3 { margin: 8px 0 6px; font-size: 18px; }
+    .install-step p { margin: 0; color: var(--body); font-size: 13px; }
+    .privacy-note { max-width: 720px; margin: 22px auto 0; padding: 13px 16px; border: 1px solid rgba(125,103,178,.16); border-radius: 15px; color: #62557c; background: rgba(255,255,255,.52); text-align: center; font-size: 12px; }
+    .faq { max-width: 780px; margin: 0 auto; }
+    .faq details { border-bottom: 1px solid var(--line); }
+    .faq summary { position: relative; padding: 17px 30px 17px 0; cursor: pointer; font-size: 16px; font-weight: 700; list-style: none; }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after { content: "+"; position: absolute; right: 2px; top: 14px; color: var(--rose); font-size: 22px; }
+    .faq details[open] summary::after { content: "−"; }
+    .faq details p { max-width: 700px; padding: 0 24px 17px 0; color: var(--body); font-size: 14px; }
+    .final-cta { margin: 15px auto 76px; padding: 42px 26px; display: flex; align-items: center; justify-content: space-between; gap: 25px; border-radius: 27px; background: var(--ink); color: #fff; }
+    .final-cta h2 { margin: 0; font-size: clamp(27px,4vw,38px); line-height: 1.1; letter-spacing: -1px; }
+    .final-cta p { margin: 8px 0 0; color: #e3d5dc; font-size: 14px; }
+    .final-cta .button { flex: none; background: var(--rose-light); color: var(--rose-dark); box-shadow: none; }
+    footer { padding: 25px 0 34px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    .footer-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    footer a { color: var(--body); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .footer-links { display: flex; gap: 18px; }
+    .disclaimer { margin-top: 11px; font-size: 11px; }
+    @media (max-width: 850px) {
+      .hero { min-height: auto; grid-template-columns: 1fr 1fr; gap: 15px; padding-top: 36px; }
+      .hero-copy { padding-left: 0; }
+      .hero-stage { min-height: 465px; }
+      .phone { transform: scale(.9) rotate(3deg); }
+      .split { gap: 35px; }
+    }
+    @media (max-width: 650px) {
+      .shell { width: min(100% - 32px, 520px); }
+      .topbar { height: 66px; }
+      .top-link { display: none; }
+      .topbar .button { min-height: 42px; padding: 0 14px; font-size: 13px; }
+      .hero { grid-template-columns: 1fr; padding: 34px 0 46px; text-align: center; }
+      .hero-copy { margin: auto; }
+      .release-pill { margin: auto; }
+      h1 { margin-top: 20px; font-size: clamp(48px, 13vw, 65px); letter-spacing: -2.7px; }
+      .hero-copy > p { margin: auto; font-size: 16px; }
+      .hero-actions, .quiet-facts { justify-content: center; }
+      .hero-actions .button { min-height: 47px; padding: 0 15px; font-size: 13px; }
+      .hero-stage { min-height: 440px; margin-top: 4px; }
+      .phone { transform: scale(.86) rotate(2deg); }
+      .section { padding: 57px 0; }
+      .feature-board { padding: 52px 0; }
+      .features { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .feature { min-height: 190px; padding: 16px; border-radius: 19px; }
+      .feature h3 { margin-top: 13px; font-size: 16px; }
+      .feature p { font-size: 12px; }
+      .split { grid-template-columns: 1fr; gap: 25px; }
+      .split-art { min-height: 225px; order: 2; }
+      .split-copy { order: 1; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .install-step { padding: 18px; }
+      .final-cta { margin-bottom: 52px; flex-direction: column; align-items: flex-start; padding: 30px 22px; }
+      .footer-row { align-items: flex-start; flex-direction: column; }
+    }
+    @media (max-width: 380px) {
+      .features { grid-template-columns: 1fr; }
+      .feature { min-height: auto; }
+      .feature-mark { float: left; margin: 0 12px 18px 0; }
+      .feature h3 { margin-top: 2px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
 </head>
-<body>
+<body id="top">
+  <header class="shell topbar">
+    <a class="brand" href="#top" aria-label="PeriBuds home"><img src="icon.png" alt=""><span>PeriBuds</span></a>
+    <nav aria-label="Main navigation">
+      <a class="top-link" href="#features">What’s inside</a>
+      <a class="top-link" href="#install">How to install</a>
+      <a class="button" href="https://github.com/vijayxprty/Peri-Cycle-Manager/releases/download/v1.1.0/PeriBuds-v1.1.0.apk" download="PeriBuds-v1.1.0.apk">↓ Get the APK</a>
+    </nav>
+  </header>
 
-<header class="topbar">
-  <div class="wrap">
-    <a class="brand" href="#top"><img src="icon.png" alt="PeriBuds logo">PeriBuds</a>
-    <span class="spacer"></span>
-    <a class="btn btn-primary btn-sm" href="https://github.com/vijayxprty/peribuds/releases/download/v1.0.6/peribuds-1.0.6.apk" download="PeriBuds-1.0.6.apk">Download</a>
-  </div>
-</header>
-
-<main id="top">
-  <div class="wrap">
-
-    <div class="hero">
-      <img class="hero-art" src="icon.png" alt="PeriBuds — a blooming rose">
-      <h1>Your period, <span class="accent">predicted gently.</span></h1>
-      <p class="sub">PeriBuds is a beautiful, private period tracker — your cycle, ovulation and fertile days, your own diet chart with reminders, and reports you can share with your doctor. All on your phone, nothing in the cloud.</p>
-      <div class="badges">
-        <span class="badge">Free forever</span>
-        <span class="badge">No ads</span>
-        <span class="badge">No account</span>
-        <span class="badge">Private — stays on your phone</span>
-        <span class="badge">Discreet reminders</span>
+  <main>
+    <section class="shell hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="release-pill"><span>NEW · 1.1.0</span> A little more care, every day</div>
+        <h1 id="hero-title">Your cycle.<br>Your own rhythm.</h1>
+        <p>Meet your gentle, private companion for cycle tracking and everyday wellbeing. Keep your periods, steps, water, meals and reports together — right on your phone.</p>
+        <div class="hero-actions">
+          <a class="button" href="https://github.com/vijayxprty/Peri-Cycle-Manager/releases/download/v1.1.0/PeriBuds-v1.1.0.apk" download="PeriBuds-v1.1.0.apk">↓ Download for Android</a>
+          <a class="button button-light" href="#features">Take a look</a>
+        </div>
+        <div class="quiet-facts" aria-label="App details">
+          <span><b>♡</b> Free to use</span><span><b>◉</b> Works offline</span><span><b>✿</b> No ads</span>
+        </div>
       </div>
-      <div class="hero-cta">
-        <a class="btn btn-primary" href="https://github.com/vijayxprty/peribuds/releases/download/v1.0.6/peribuds-1.0.6.apk" download="PeriBuds-1.0.6.apk">⬇ Download the app</a>
-        <a class="btn btn-ghost" href="https://github.com/vijayxprty/peribuds/releases/tag/v1.0.6">See what's new in 1.0.6</a>
-      </div>
-      <p class="version-line"><b>Version 1.0.6</b> · Android · About 54 MB · Free</p>
-    </div>
 
-    <section>
-      <h2>Everything she needs, nothing she doesn't</h2>
-      <p class="section-sub">Made for real life — for school, work, travel, and those days you just want a gentle heads-up.</p>
-      <div class="grid">
-        <div class="card">
-          <div class="art">🌹</div>
-          <div><h3>Next period, predicted</h3>
-          <p>See your expected next period at a glance, with days to go. The prediction learns from your own cycles as you log them.</p></div>
-        </div>
-        <div class="card">
-          <div class="art">📅</div>
-          <div><h3>A calendar that makes sense</h3>
-          <p>Mark a period by start and end date in one tap. Period days, fertile window and ovulation are all visible on one calm calendar.</p></div>
-        </div>
-        <div class="card">
-          <div class="art">🥗</div>
-          <div><h3>Your own diet chart</h3>
-          <p>Build your own food chart — breakfast, lunch, snacks, dinner, anything. Same chart every day, or a different one per day. Reminders when a meal is due, and a note when one is skipped.</p></div>
-        </div>
-        <div class="card">
-          <div class="art">📊</div>
-          <div><h3>Reports for you — and your doctor</h3>
-          <p>Average cycle and period length, cycle history with month and year filters, symptoms, and a PDF you can download and share with your doctor.</p></div>
-        </div>
-        <div class="card">
-          <div class="art">🔔</div>
-          <div><h3>Discreet reminders</h3>
-          <p>Gentle reminders before your period starts, and for every meal — worded discreetly, so a notification on a shared screen never gives anything away.</p></div>
-        </div>
-        <div class="card">
-          <div class="art">✈️</div>
-          <div><h3>Travel mode</h3>
-          <p>Enter your trip dates and PeriBuds warns you if a period is expected to overlap — with a pack-pads checklist so you're never caught unprepared.</p></div>
-        </div>
-        <div class="card">
-          <div class="art">🔒</div>
-          <div><h3>Private by design</h3>
-          <p>No account, no sign-up, no internet needed. Your cycles and diet live only on your phone — never uploaded, never shared. And there are no ads, ever.</p></div>
-        </div>
-        <div class="card">
-          <div class="art">💗</div>
-          <div><h3>Symptoms &amp; mood</h3>
-          <p>Log symptoms and mood each day, and see patterns across your cycles — what repeats, and when.</p></div>
+      <div class="hero-stage" aria-label="Preview of the PeriBuds home screen">
+        <div class="bloom" aria-hidden="true"></div>
+        <span class="spark one" aria-hidden="true">✦</span><span class="spark two" aria-hidden="true">✧</span>
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-status"><span>9:41</span><span>● ● ▰</span></div>
+            <div class="phone-brand"><span><img src="icon.png" alt="">PeriBuds</span><span class="tiny-heart">♥</span></div>
+            <div class="phone-greeting">Good morning <span aria-hidden="true">☀️</span><small>A fresh day, at your pace.</small></div>
+            <div class="cycle-card">
+              <div class="cycle-top"><span>Your cycle</span><span>Today</span></div>
+              <div class="cycle-orbit"><div class="cycle-core"><small>Current phase</small><strong>Your rhythm</strong><b>starts with your data</b></div></div>
+              <div class="phone-caption">A calm view of the days ahead</div>
+            </div>
+            <div class="mini-wellbeing">
+              <div class="mini-card"><span class="mini-label">♧ Steps</span><strong class="mini-number">8-step flow</strong><small class="mini-hint">Your goal, your way</small></div>
+              <div class="mini-card water"><span class="mini-label">💧 Water</span><strong class="mini-number">A small sip</strong><small class="mini-hint">Log what you drink</small></div>
+            </div>
+            <div class="phone-note">A gentle reminder: take today one step at a time.</div>
+            <div class="phone-dock"><span>▦<br>Calendar</span><span>♧<br>Diet</span><span class="dock-home">⌂</span><span>▤<br>Reports</span><span>⚙<br>Settings</span></div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section>
-      <div class="band">
-        <p>Free, private, and made with care.<span>No account. No cloud. No ads. Just your cycle, on your phone.</span></p>
-        <a class="btn" href="https://github.com/vijayxprty/peribuds/releases/download/v1.0.6/peribuds-1.0.6.apk" download="PeriBuds-1.0.6.apk">Download free</a>
+    <section class="feature-board" id="features">
+      <div class="shell">
+        <div class="section-head"><h2>One app, a little more in your corner.</h2><p>From cycle notes to daily sips, PeriBuds brings the things you want to keep track of into one calm place.</p></div>
+        <div class="features">
+          <article class="feature"><div class="feature-mark">🌹</div><h3>Know your cycle</h3><p>Log your period and see cycle patterns, expected dates, fertile-window estimates and ovulation estimates in a clear calendar.</p></article>
+          <article class="feature"><div class="feature-mark">👟</div><h3>Walk your way</h3><p>Automatic step counting with a goal you choose. Progress moves in 8-step increments; there are no manual step edits.</p></article>
+          <article class="feature"><div class="feature-mark">💧</div><h3>Keep water in view</h3><p>Log a glass in a tap, set your own daily target and see your intake build through the day.</p></article>
+          <article class="feature"><div class="feature-mark">🥗</div><h3>Your meals, your routine</h3><p>Make a meal chart that fits your day, mark meals done and choose the reminders you want.</p></article>
+          <article class="feature"><div class="feature-mark">📊</div><h3>Patterns you can share</h3><p>Review cycle history and averages, then create a report you can save or share.</p></article>
+          <article class="feature"><div class="feature-mark">⚙️</div><h3>Set it your way</h3><p>Manage activity and notification access, choose reminders and find app credits in Settings.</p></article>
+          <article class="feature"><div class="feature-mark">🧳</div><h3>Plan around travel</h3><p>Add a trip to see if it overlaps with an expected period, with a handy packing checklist.</p></article>
+          <article class="feature"><div class="feature-mark">🌤️</div><h3>Notice how you feel</h3><p>Keep a simple daily record of symptoms and mood, then look back for patterns across cycles.</p></article>
+          <article class="feature"><div class="feature-mark">🔒</div><h3>Private by design</h3><p>No account, cloud sync or ads. Your cycle and wellbeing records stay in the app’s local storage.</p></article>
+        </div>
       </div>
     </section>
 
-    <section>
-      <h2>Get it on your Android phone</h2>
-      <p class="section-sub">Straight from here — no app store needed.</p>
-      <div class="steps">
-        <div class="step"><b>Tap Download</b><span>Use the download button on this page to get the PeriBuds APK file.</span></div>
-        <div class="step"><b>Open the downloaded file</b><span>Find it in your notifications or Downloads folder and tap it.</span></div>
-        <div class="step"><b>Allow the install</b><span>If your phone asks, allow your browser to install apps — just this once — then tap Install.</span></div>
-        <div class="step"><b>Open PeriBuds</b><span>Your calendar starts empty — log your first period and PeriBuds takes it from there. The diet chart comes with a sample you can clear in one tap.</span></div>
+    <section class="shell section">
+      <div class="split">
+        <div class="split-art" aria-hidden="true"><div class="big-water"><span>sip ✦</span></div></div>
+        <div class="split-copy">
+          <h2>Small steps count, too.</h2>
+          <p>Choose any step goal that feels right. PeriBuds counts automatically after you allow activity access, then groups your progress into 8-step increments. You’ll also see an estimated calorie burn based on your recorded steps.</p>
+          <ul><li>Your goal can be any positive whole number</li><li>Steps come from your phone’s activity sensor</li><li>Water logging and its target are yours to set</li></ul>
+        </div>
       </div>
-      <p class="fineprint">Already on an earlier PeriBuds version? Just install this right over it — no uninstall needed, and your records stay.</p>
     </section>
 
-    <section>
-      <h2>Good to know</h2>
-      <p class="section-sub">Straight answers, no fine print.</p>
+    <section class="steps-section" id="install">
+      <div class="shell section">
+        <div class="section-head"><h2>Ready when you are.</h2><p>Download the Android APK and install it on your phone in a few taps.</p></div>
+        <div class="steps-grid">
+          <article class="install-step"><span>FIRST</span><h3>Download the APK</h3><p>Tap the button below. The file is about 53.8 MB.</p></article>
+          <article class="install-step"><span>THEN</span><h3>Open and install</h3><p>Open the downloaded file. If Android asks, allow your browser to install this app, then tap Install.</p></article>
+          <article class="install-step"><span>THAT’S IT</span><h3>Make it yours</h3><p>Open PeriBuds, set your goals and log the cycle details you want to track.</p></article>
+        </div>
+        <p class="privacy-note">Your records stay on your device. Step counting begins after you grant activity access; steps from earlier that day may not be included. Calories are estimates, and cycle predictions are not medical advice.</p>
+      </div>
+    </section>
+
+    <section class="shell section">
+      <div class="section-head"><h2>Good to know</h2><p>A few plain answers before you install.</p></div>
       <div class="faq">
-        <details><summary>Is PeriBuds really free?</summary>
-        <p>Yes — free to download, free to use, no ads, no subscriptions, forever.</p></details>
-        <details><summary>Does it need the internet?</summary>
-        <p>No. Everything works offline, on your phone. Your data never leaves your device.</p></details>
-        <details><summary>Is my information private?</summary>
-        <p>Yes. There is no account and nothing is uploaded anywhere. Your cycles and diet stay on your phone, and uninstalling the app erases them — so keep a backup of anything you need.</p></details>
-        <details><summary>Does it work on iPhone?</summary>
-        <p>Not yet — the iPhone build is made on a Mac and will be added here as an .ipa file for sideloading. Android is ready today.</p></details>
-        <details><summary>Will reminders say "period" on my lock screen?</summary>
-        <p>No. Reminders are worded discreetly — a gentle nudge, never the word "period" in the notification itself.</p></details>
+        <details><summary>Does PeriBuds need an account or internet?</summary><p>No account or cloud sync. The app’s core tracking is designed to work offline, and your records are stored locally on your phone.</p></details>
+        <details><summary>Can I set any step goal?</summary><p>Yes. Choose any positive whole-number goal. The step display advances in 8-step increments, and steps are counted automatically after activity permission is granted.</p></details>
+        <details><summary>Does the app tell me how much water to drink?</summary><p>No. You choose your own water target and record your intake. The tracker does not prescribe a daily amount.</p></details>
+        <details><summary>Will this update an earlier PeriBuds install?</summary><p>Yes. This APK is signed with the same certificate as the previous build, so it can be installed over it while keeping the app’s local data.</p></details>
+        <details><summary>Is an iPhone version available?</summary><p>This release is an Android APK. It can’t be installed on iPhone.</p></details>
       </div>
     </section>
 
-    <div class="final">
-      <a class="btn btn-primary" href="https://github.com/vijayxprty/peribuds/releases/download/v1.0.6/peribuds-1.0.6.apk" download="PeriBuds-1.0.6.apk">⬇ Download PeriBuds — Free</a>
-      <p class="version-line" style="margin-top:12px;">Version 1.0.6 · Android · <a href="https://github.com/vijayxprty/peribuds">Source on GitHub</a></p>
+    <section class="shell final-cta" aria-label="Download PeriBuds">
+      <div><h2>Make room for your rhythm.</h2><p>PeriBuds 1.1.0 · Android · Free · No ads</p></div>
+      <a class="button" href="https://github.com/vijayxprty/Peri-Cycle-Manager/releases/download/v1.1.0/PeriBuds-v1.1.0.apk" download="PeriBuds-v1.1.0.apk">↓ Download the APK</a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell">
+      <div class="footer-row"><span>Made with <span style="color:var(--rose)">♥</span> by Vijay Mamta Sahani</span><div class="footer-links"><a href="https://github.com/vijayxprty/Peri-Cycle-Manager">GitHub</a><a href="https://github.com/vijayxprty/Peri-Cycle-Manager/releases">Releases</a><a href="#top">Back to top</a></div></div>
+      <p class="disclaimer">PeriBuds is a personal tracking tool. Cycle and calorie figures are estimates and are not medical advice.</p>
     </div>
-
-  </div>
-</main>
-
-<footer>
-  <div class="wrap">
-    <p class="love">Made with <span class="heart">♥</span> by Vijay Mamta Sahani</p>
-    <p>Follow along on Instagram — <a href="https://www.instagram.com/momentswithvms/" target="_blank" rel="noopener">@momentswithvms</a></p>
-    <div class="foot-links">
-      <a href="https://github.com/vijayxprty/peribuds/releases/download/v1.0.6/peribuds-1.0.6.apk" download="PeriBuds-1.0.6.apk">Download the app</a>
-      <a href="https://github.com/vijayxprty/peribuds">GitHub</a>
-      <a href="#top">Back to top</a>
-    </div>
-    <p class="tiny">PeriBuds v1.0.6 · Free · Android · Your data stays on your device. PeriBuds predicts from the cycles you log — predictions are estimates, not medical advice.</p>
-  </div>
-</footer>
-
+  </footer>
 </body>
 </html>
