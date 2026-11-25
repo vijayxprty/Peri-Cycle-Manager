@@ -1,7 +1,7 @@
 name: peribuds
 description: "PeriBuds — period tracker and diet companion, fully offline."
 publish_to: 'none'
-version: 1.0.6+7
+version: 1.0.11+12
 
 environment:
   sdk: ^3.9.2

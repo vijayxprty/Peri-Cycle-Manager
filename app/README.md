@@ -1,16 +1,6 @@
-# peribuds
+# Backup of Working Version
 
-PeriBuds — period tracker and diet companion, fully offline.
+Frozen snapshot of the existing PeriBuds v1.0.11+12 source before wellbeing additions.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This directory is the preservation copy. Make future feature changes in `work/peribuds-v-next`.
+The original build source remains in `work/peribuds-build/source-code`.
