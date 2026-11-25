@@ -1,46 +1,35 @@
-# PeriBuds 🌹
+# Peri Cycle Manager — PeriBuds 🌹
 
-**Your period, predicted gently.**
+**Your cycle, food and daily wellbeing in one private app.**
 
-PeriBuds is a free, fully offline period tracker for Android and iOS — periods,
-ovulation and fertile window, your own diet chart with reminders, and reports
-you can share with your doctor. No account, no cloud, no ads.
+PeriBuds is a free, fully offline period and wellbeing tracker for Android and iOS. No account, no cloud, no ads.
 
-- 🌹 **Next period, predicted** — expected date with days to go; learns from your cycles
-- 📅 **Calendar** — mark a period by start and end date in one tap
-- 🥗 **Diet chart** — build your own meals, repeat per day, reminders for every meal
-- 📊 **Reports** — average cycle/period length, history with month & year filters, PDF for your doctor
-- 🔔 **Discreet reminders** — gentle wording, never the word "period" in a notification
-- ✈️ **Travel mode** — warns if a period overlaps a trip, with a pack-pads checklist
-- 🔒 **Private by design** — everything stays on your phone
+## Current version
 
-## Download
+- **v1.1.0** adds automatic phone step counting, calories burned estimates, personal step goals, water intake logging and a Settings destination.
+- The existing cycle predictions, Calendar, Diet, Reports, travel tools, reminders, and local records remain part of the app.
+- Steps display in 8-step increments. The goal can be any positive whole number. Water amount and target are user controlled.
 
-- **Android:** [peribuds-1.0.6.apk](https://github.com/vijayxprty/peribuds/releases/download/v1.0.6/peribuds-1.0.6.apk) — install right over any earlier version, your data stays.
-  Or visit the landing page: https://vijayxprty.github.io/peribuds/
-- **iPhone:** the .ipa is built on a Mac (`flutter build ipa --no-codesign`) and will be added here for sideloading.
+## Preserved version
+
+- The `backup-of-working-version` branch and tag preserve the existing **v1.0.11+12** source before wellbeing changes.
+- `main` is the new development version, based on that backup.
+- Flutter app source: [`app/`](app/)
+
+## Existing PeriBuds features
+
+- 🌹 **Cycle predictions** — expected date and cycle phase based on periods you log.
+- 📅 **Calendar** — mark a period by start and end date.
+- 🥗 **Diet chart** — build meals, repeat per day, and set meal reminders.
+- 📊 **Reports** — cycle history, averages, filters and PDF sharing.
+- 🔔 **Discreet reminders** — gentle wording in notifications.
+- ✈️ **Travel mode** — trip overlap notices and a packing checklist.
+- 🔒 **Private by design** — records stay in local app storage.
 
 ## Build from source
 
-Flutter 3.35.7, Dart 3.9.2. The Android release build uses a local Gradle 8.12
-(the Gradle wrapper can't download its distribution in this sandbox):
-
-```bash
-export PATH="$HOME/flutter/bin:$PATH" JAVA_HOME=$HOME/jdk17 \
-  ANDROID_HOME=$HOME/android-sdk ANDROID_SDK_ROOT=$HOME/android-sdk \
-  GRADLE_USER_HOME=$HOME/.gradle
-cd app/android
-~/gradle-8.12/bin/gradle assembleRelease --no-daemon --console=plain
-# output: app/build/app/outputs/flutter-apk/app-release.apk
-```
-
-`flutter analyze` clean, `flutter test` 5/5. Release signing uses a local
-keystore (`app/android/app/peribuds-release.keystore`, never committed) with
-passwords in `app/android/key.properties` (also never committed).
+Flutter 3.35.7 and Dart 3.9.2. From `app/`, run `flutter pub get`, then `flutter run` or `flutter build apk --release`.
 
 ## Privacy
 
-No account, no cloud, no analytics, no ads. All data is stored locally on the
-device. Predictions are estimates from the cycles you log — not medical advice.
-
-Made with ♥ by Vijay Mamta Sahani — [@momentswithvms](https://www.instagram.com/momentswithvms/)
+No account, cloud sync, analytics or ads. Data is stored locally on the device. Cycle predictions and calories are estimates, not medical advice.

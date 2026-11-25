@@ -29,6 +29,13 @@ class AppState extends ChangeNotifier {
   List<CustomReminder> customReminders = [];
   bool mealRemindersOn = true;
   bool periodRemindersOn = true;
+  // Wellbeing additions. Records remain in the same private, local store.
+  int stepGoal = 10000;
+  int stepCount = 0;
+  int waterGoalMl = 2000;
+  int waterTodayMl = 0;
+  String wellbeingDayKey = '';
+  List<Map<String, dynamic>> waterEntries = [];
   bool demoCleared = false;
   bool demoSeeded = false;
 
@@ -99,6 +106,15 @@ class AppState extends ChangeNotifier {
         .toList();
     mealRemindersOn = json['mealRemindersOn'] as bool? ?? true;
     periodRemindersOn = json['periodRemindersOn'] as bool? ?? true;
+    stepGoal = (json['stepGoal'] as num?)?.toInt() ?? 10000;
+    stepCount = (json['stepCount'] as num?)?.toInt() ?? 0;
+    waterGoalMl = (json['waterGoalMl'] as num?)?.toInt() ?? 2000;
+    waterTodayMl = (json['waterTodayMl'] as num?)?.toInt() ?? 0;
+    wellbeingDayKey = json['wellbeingDayKey'] as String? ?? '';
+    waterEntries = (json['waterEntries'] as List<dynamic>? ?? [])
+        .whereType<Map<String, dynamic>>()
+        .toList();
+    _rollWellbeingDayIfNeeded();
     demoCleared = json['demoCleared'] as bool? ?? false;
     demoSeeded = json['demoSeeded'] as bool? ?? false;
     symptomsByDay = {};
@@ -127,6 +143,12 @@ class AppState extends ChangeNotifier {
         'customReminders': customReminders.map((r) => r.toJson()).toList(),
         'mealRemindersOn': mealRemindersOn,
         'periodRemindersOn': periodRemindersOn,
+        'stepGoal': stepGoal,
+        'stepCount': stepCount,
+        'waterGoalMl': waterGoalMl,
+        'waterTodayMl': waterTodayMl,
+        'wellbeingDayKey': wellbeingDayKey,
+        'waterEntries': waterEntries,
         'demoCleared': demoCleared,
         'demoSeeded': demoSeeded,
         'symptomsByDay': symptomsByDay,
@@ -146,6 +168,62 @@ class AppState extends ChangeNotifier {
 
   Future<void> rescheduleNotifications() async {
     await NotificationService.instance.rescheduleAll(this);
+  }
+
+  void _rollWellbeingDayIfNeeded() {
+    final today = dateKey(DateTime.now());
+    if (wellbeingDayKey != today) {
+      wellbeingDayKey = today;
+      stepCount = 0;
+      waterTodayMl = 0;
+      waterEntries = [];
+    }
+  }
+
+  double get stepCaloriesEstimate => stepCount * 0.04;
+
+  Future<void> setStepGoal(int value) async {
+    if (value < 1) return;
+    stepGoal = value;
+    await _mutate();
+  }
+
+  Future<void> recordSensorSteps(int value) async {
+    _rollWellbeingDayIfNeeded();
+    final rounded = value < 0 ? 0 : value - (value % 8);
+    if (rounded == stepCount) return;
+    stepCount = rounded;
+    await _mutate();
+  }
+
+  Future<void> ensureWellbeingDay() async {
+    final oldKey = wellbeingDayKey;
+    _rollWellbeingDayIfNeeded();
+    if (oldKey != wellbeingDayKey) await _mutate();
+  }
+
+  Future<void> setWaterGoalMl(int value) async {
+    if (value < 1) return;
+    waterGoalMl = value;
+    await _mutate();
+  }
+
+  Future<void> addWater(int millilitres) async {
+    if (millilitres < 1) return;
+    _rollWellbeingDayIfNeeded();
+    waterTodayMl += millilitres;
+    waterEntries.add({
+      'ml': millilitres,
+      'time': DateTime.now().toIso8601String(),
+    });
+    await _mutate();
+  }
+
+  Future<void> undoLastWater() async {
+    if (waterEntries.isEmpty) return;
+    final last = waterEntries.removeLast();
+    waterTodayMl = max(0, waterTodayMl - ((last['ml'] as num?)?.toInt() ?? 0));
+    await _mutate();
   }
 
   // ---------------------------------------------------------------- periods
@@ -826,6 +904,10 @@ class AppState extends ChangeNotifier {
     symptomsByDay = {};
     moodByDay = {};
     trips = [];
+    stepCount = 0;
+    waterTodayMl = 0;
+    waterEntries = [];
+    wellbeingDayKey = dateKey(DateTime.now());
     demoCleared = true;
     demoSeeded = true;
     await _mutate();

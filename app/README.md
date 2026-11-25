@@ -1,6 +1,7 @@
-# Backup of Working Version
+# PeriBuds app
 
-Frozen snapshot of the existing PeriBuds v1.0.11+12 source before wellbeing additions.
+Flutter app source for the Peri Cycle Manager repository.
 
-This directory is the preservation copy. Make future feature changes in `work/peribuds-v-next`.
-The original build source remains in `work/peribuds-build/source-code`.
+The `backup-of-working-version` branch preserves v1.0.11+12. `main` adds wellbeing screens while keeping the existing Home, Calendar, Diet, Reports, offline storage, and reminder workflows.
+
+Run `flutter pub get`, then `flutter run` from this directory.

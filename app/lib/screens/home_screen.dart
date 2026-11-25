@@ -16,11 +16,15 @@ class HomeScreen extends StatefulWidget {
     required this.state,
     required this.onGoToCalendar,
     required this.onGoToDiet,
+    required this.onGoToSteps,
+    required this.onGoToWater,
   });
 
   final AppState state;
   final VoidCallback onGoToCalendar;
   final VoidCallback onGoToDiet;
+  final VoidCallback onGoToSteps;
+  final VoidCallback onGoToWater;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -369,6 +373,24 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
+
+        // Wellbeing additions. Existing cycle, calendar, and meal flows stay.
+        PBCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Today’s wellbeing', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+              const Text('Movement & hydration', style: TextStyle(fontSize: 12, color: PB.muted)),
+              const SizedBox(height: 10),
+              Row(children: [
+                Expanded(child: _WellbeingTile(icon: Icons.directions_walk, title: 'Steps', value: '${state.stepCount}', detail: 'of ${state.stepGoal} · ~${state.stepCaloriesEstimate.round()} kcal', color: PB.roseSoft, onTap: widget.onGoToSteps)),
+                const SizedBox(width: 10),
+                Expanded(child: _WellbeingTile(icon: Icons.water_drop_outlined, title: 'Water', value: '${(state.waterTodayMl / 1000).toStringAsFixed(2)} L', detail: 'of ${(state.waterGoalMl / 1000).toStringAsFixed(1)} L goal', color: const Color(0xFFEAF6FB), onTap: widget.onGoToWater)),
+              ]),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
 
         // Calendar card — month header with ‹ › arrows, today is a dark
         // filled square here (approved Home), plus the "Today, 18 Nov — …"
@@ -796,6 +818,34 @@ String _todayNote(AppState state, DateTime today) {
     fertileBit = '';
   }
   return 'Today, ${fmtDayMonth(today)} — Day $doc. $fertileBit Expected next period: ${fmtDayMonth(next)}.';
+}
+
+class _WellbeingTile extends StatelessWidget {
+  const _WellbeingTile({required this.icon, required this.title, required this.value, required this.detail, required this.color, required this.onTap});
+  final IconData icon;
+  final String title, value, detail;
+  final Color color;
+  final VoidCallback onTap;
+  @override
+  Widget build(BuildContext context) => Material(
+        color: color,
+        borderRadius: BorderRadius.circular(18),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [Icon(icon, size: 17, color: title == 'Water' ? const Color(0xFF418BB5) : PB.rose), const SizedBox(width: 6), Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: PB.softText))]),
+              const SizedBox(height: 8),
+              Text(value, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w800, color: PB.ink)),
+              Text(detail, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 9, color: PB.softText)),
+              const SizedBox(height: 6),
+              Text(title == 'Water' ? 'Log water ›' : 'View steps ›', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: PB.rose)),
+            ]),
+          ),
+        ),
+      );
 }
 
 class _HeroChip extends StatelessWidget {
