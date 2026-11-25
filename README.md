@@ -16,6 +16,11 @@ PeriBuds is a free, fully offline period and wellbeing tracker for Android and i
 - `main` is the new development version, based on that backup.
 - Flutter app source: [`app/`](app/)
 
+## Download
+
+- **Android APK v1.1.0:** [PeriBuds-v1.1.0.apk](https://github.com/vijayxprty/Peri-Cycle-Manager/releases/download/v1.1.0/PeriBuds-v1.1.0.apk)
+- [Release notes and older versions](https://github.com/vijayxprty/Peri-Cycle-Manager/releases)
+
 ## Existing PeriBuds features
 
 - 🌹 **Cycle predictions** — expected date and cycle phase based on periods you log.
