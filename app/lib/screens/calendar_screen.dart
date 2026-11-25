@@ -59,10 +59,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final next = state.expectedNext;
     final selectedKey = dateKey(_selectedDay);
     final isPeriod = state.isPeriodDay(_selectedDay);
-    final isOvu = state.ovulationDay != null &&
+    final isOvu =
+        state.ovulationDay != null &&
         dateOnly(state.ovulationDay!) == _selectedDay;
-    final isFertile =
-        state.fertileDayKeys.contains(selectedKey) && !isPeriod;
+    final isFertile = state.fertileDayKeys.contains(selectedKey) && !isPeriod;
     final isPredicted =
         state.predictedDayKeys.contains(selectedKey) && !isPeriod;
 
@@ -73,7 +73,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
     if (rs != null && re != null) {
       rangeLen = dateOnly(re).difference(dateOnly(rs)).inDays.abs() + 1;
     }
-    final rangeMarked = hasRange &&
+    final rangeMarked =
+        hasRange &&
         state.isRangeFullyMarked(
           rs.isBefore(re) ? rs : re,
           rs.isBefore(re) ? re : rs,
@@ -100,15 +101,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
       detailBody = next == null
           ? 'Log your first period below and I will start predicting.'
           : state.isOverdue
-              ? 'Your period was due ${fmtWeekdayDay(next)} — ${state.daysLate} day${state.daysLate == 1 ? '' : 's'} late. Log it when it starts.'
-              : '${state.currentPhase} phase. Expected next period: ${fmtWeekdayDay(next)}.';
+          ? 'Your period was due ${fmtWeekdayDay(next)} — ${state.daysLate} day${state.daysLate == 1 ? '' : 's'} late. Log it when it starts.'
+          : '${state.currentPhase} phase. Expected next period: ${fmtWeekdayDay(next)}.';
     } else {
       detailTitle = fmtDayMonthYear(_selectedDay);
       detailBody = next == null
           ? 'Expected next period: not known yet.'
           : state.isOverdue
-              ? 'Your period was due ${fmtWeekdayDay(next)} — ${state.daysLate} day${state.daysLate == 1 ? '' : 's'} late.'
-              : 'Expected next period: ${fmtWeekdayDay(next)}.';
+          ? 'Your period was due ${fmtWeekdayDay(next)} — ${state.daysLate} day${state.daysLate == 1 ? '' : 's'} late.'
+          : 'Expected next period: ${fmtWeekdayDay(next)}.';
     }
 
     return ListView(
@@ -147,11 +148,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 color: Color(0xFFFBD9D6),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.favorite,
-                color: PB.rose,
-                size: 20,
-              ),
+              child: const Icon(Icons.favorite, color: PB.rose, size: 20),
             ),
           ],
         ),
@@ -174,18 +171,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 TextSpan(text: 'Tap a day to pick it, then set it as '),
                 TextSpan(
                   text: 'start',
-                  style: TextStyle(
-                    color: PB.rose,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: TextStyle(color: PB.rose, fontWeight: FontWeight.w800),
                 ),
                 TextSpan(text: ' or '),
                 TextSpan(
                   text: 'end',
-                  style: TextStyle(
-                    color: PB.rose,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: TextStyle(color: PB.rose, fontWeight: FontWeight.w800),
                 ),
                 TextSpan(text: ' below'),
               ],
@@ -215,8 +206,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             const SizedBox(width: 8),
             _StatCard(
               label: 'Expected next',
-              value:
-                  next != null ? fmtDayMonth(next) : '—',
+              value: next != null ? fmtDayMonth(next) : '—',
               // Never "in -15 days": overdue shows "15 days late".
               sub: next != null ? state.daysToGoLabel : 'Log a period',
             ),
@@ -632,9 +622,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         context: context,
                         initialDate: start,
                         firstDate: DateTime.now(),
-                        lastDate: DateTime.now().add(
-                          const Duration(days: 365),
-                        ),
+                        lastDate: DateTime.now().add(const Duration(days: 365)),
                       );
                       if (picked != null) {
                         setDialogState(() {
@@ -654,9 +642,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         context: context,
                         initialDate: end,
                         firstDate: start,
-                        lastDate: DateTime.now().add(
-                          const Duration(days: 365),
-                        ),
+                        lastDate: DateTime.now().add(const Duration(days: 365)),
                       );
                       if (picked != null) {
                         setDialogState(() => end = picked);
@@ -704,18 +690,20 @@ class _StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
+        height: 104,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: const Color(0xFFEFE2E0)),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF502332).withValues(alpha: 0.06),
-              blurRadius: 18,
-              offset: const Offset(0, 6),
+              color: const Color(0xFF502332).withValues(alpha: 0.07),
+              blurRadius: 16,
+              offset: const Offset(0, 5),
             ),
           ],
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

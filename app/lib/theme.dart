@@ -168,11 +168,7 @@ class GhostPillButton extends StatelessWidget {
 /// button in the reference). Flutter's BorderStyle has no dashed style,
 /// so the dashes are painted with a CustomPainter.
 class DashedButton extends StatelessWidget {
-  const DashedButton({
-    super.key,
-    required this.label,
-    required this.onPressed,
-  });
+  const DashedButton({super.key, required this.label, required this.onPressed});
 
   final String label;
   final VoidCallback onPressed;
@@ -182,9 +178,7 @@ class DashedButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: CustomPaint(
-        painter: _DashedRoundedRectPainter(
-          color: const Color(0xFFE8C9C4),
-        ),
+        painter: _DashedRoundedRectPainter(color: const Color(0xFFE8C9C4)),
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 11),
@@ -295,10 +289,7 @@ class _DashedRoundedRectPainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
     final path = Path()
       ..addRRect(
-        RRect.fromRectAndRadius(
-          Offset.zero & size,
-          const Radius.circular(14),
-        ),
+        RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(14)),
       );
     const dash = 6.0;
     const gap = 4.0;
@@ -411,11 +402,12 @@ class PBCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0xFFEFE2E0), width: 1),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF502332).withValues(alpha: 0.06),
-            blurRadius: 22,
-            offset: const Offset(0, 8),
+            color: const Color(0xFF502332).withValues(alpha: 0.075),
+            blurRadius: 18,
+            offset: const Offset(0, 5),
           ),
         ],
       ),

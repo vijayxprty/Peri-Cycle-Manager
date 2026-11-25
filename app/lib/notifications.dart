@@ -37,8 +37,9 @@ class NotificationService {
     tzdata.initializeTimeZones();
     try {
       // Guarded: on some devices/emulators the timezone channel can stall.
-      final name = await FlutterTimezone.getLocalTimezone()
-          .timeout(const Duration(seconds: 5));
+      final name = await FlutterTimezone.getLocalTimezone().timeout(
+        const Duration(seconds: 5),
+      );
       tz.setLocalLocation(tz.getLocation(name));
     } catch (_) {
       tzdata.initializeTimeZones();
@@ -51,17 +52,10 @@ class NotificationService {
       requestSoundPermission: true,
     );
     await _plugin
-        .initialize(
-          const InitializationSettings(android: android, iOS: ios),
-        )
+        .initialize(const InitializationSettings(android: android, iOS: ios))
         .timeout(const Duration(seconds: 5));
-    try {
-      await _plugin
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.requestNotificationsPermission()
-          .timeout(const Duration(seconds: 5));
-    } catch (_) {}
+    // Android runtime permission prompts are handled by the first-launch
+    // permission primer, after the user has been told why reminders need it.
   }
 
   static const _androidDetails = AndroidNotificationDetails(
@@ -74,10 +68,8 @@ class NotificationService {
 
   static const _iosDetails = DarwinNotificationDetails();
 
-  NotificationDetails get _details => const NotificationDetails(
-        android: _androidDetails,
-        iOS: _iosDetails,
-      );
+  NotificationDetails get _details =>
+      const NotificationDetails(android: _androidDetails, iOS: _iosDetails);
 
   Future<void> cancelAll() async {
     if (!_available) return;
@@ -97,7 +89,8 @@ class NotificationService {
             body,
             tz.TZDateTime.from(when, tz.local),
             _details,
-            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+            // Gentle reminders do not require the special exact-alarm access.
+            androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
           )
           .timeout(const Duration(seconds: 5));
     } catch (_) {}

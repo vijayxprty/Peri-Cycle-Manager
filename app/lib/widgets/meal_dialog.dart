@@ -108,8 +108,7 @@ class _MealDialogState extends State<_MealDialog> {
       return;
     }
     final meal = Meal(
-      id: widget.existing?.id ??
-          '${DateTime.now().millisecondsSinceEpoch}',
+      id: widget.existing?.id ?? '${DateTime.now().millisecondsSinceEpoch}',
       title: title,
       time24: to24h(_time.hour, _time.minute),
       description: _descCtrl.text.trim(),
@@ -187,14 +186,27 @@ class _MealDialogState extends State<_MealDialog> {
                         label: t,
                         selected: _type == t,
                         onTap: () => setState(() {
-                          _type = t;
-                          if (_titleCtrl.text.isEmpty) {
+                          final title = _titleCtrl.text.trim();
+                          // Category chips set a useful default name while
+                          // preserving a name the user has already entered.
+                          if (title.isEmpty || title == _type) {
                             _titleCtrl.text = t;
+                            _titleCtrl.selection = TextSelection.collapsed(
+                              offset: _titleCtrl.text.length,
+                            );
                           }
+                          _type = t;
                         }),
                       ),
                     )
                     .toList(),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 5),
+                child: Text(
+                  'Choose a category to use it as the meal name, or edit the name below.',
+                  style: TextStyle(fontSize: 11, color: PB.muted),
+                ),
               ),
               const _FieldLabel('Name your meal'),
               TextField(
@@ -283,8 +295,7 @@ class _MealDialogState extends State<_MealDialog> {
                 textCapitalization: TextCapitalization.sentences,
                 maxLines: 2,
                 style: const TextStyle(fontSize: 15),
-                decoration:
-                    _inputDecoration('e.g. Poha · 1 bowl, Curd'),
+                decoration: _inputDecoration('e.g. Poha · 1 bowl, Curd'),
               ),
               const _FieldLabel('Repeat'),
               Wrap(
@@ -330,8 +341,7 @@ class _MealDialogState extends State<_MealDialog> {
                         decoration: BoxDecoration(
                           color: selected ? PB.rose : Colors.white,
                           border: Border.all(
-                            color:
-                                selected ? PB.rose : const Color(0xFFE8C9C4),
+                            color: selected ? PB.rose : const Color(0xFFE8C9C4),
                             width: 1.5,
                           ),
                           borderRadius: BorderRadius.circular(14),
@@ -354,9 +364,7 @@ class _MealDialogState extends State<_MealDialog> {
                                 fontSize: 10,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 1,
-                                color: selected
-                                    ? Colors.white
-                                    : PB.softText,
+                                color: selected ? Colors.white : PB.softText,
                               ),
                             ),
                             Text(
@@ -373,9 +381,7 @@ class _MealDialogState extends State<_MealDialog> {
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w700,
-                                color: selected
-                                    ? Colors.white
-                                    : PB.softText,
+                                color: selected ? Colors.white : PB.softText,
                               ),
                             ),
                           ],
@@ -392,10 +398,7 @@ class _MealDialogState extends State<_MealDialog> {
                 children: [
                   const Text(
                     'Remind me when due',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                   Switch(
                     value: _remind,
@@ -460,22 +463,22 @@ class _MealDialogState extends State<_MealDialog> {
 }
 
 InputDecoration _inputDecoration(String hint) => InputDecoration(
-      hintText: hint,
-      hintStyle: const TextStyle(color: PB.muted, fontSize: 15),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: Color(0xFFE8C9C4), width: 1.5),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: Color(0xFFE8C9C4), width: 1.5),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: PB.rose, width: 1.5),
-      ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-    );
+  hintText: hint,
+  hintStyle: const TextStyle(color: PB.muted, fontSize: 15),
+  border: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(14),
+    borderSide: const BorderSide(color: Color(0xFFE8C9C4), width: 1.5),
+  ),
+  enabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(14),
+    borderSide: const BorderSide(color: Color(0xFFE8C9C4), width: 1.5),
+  ),
+  focusedBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(14),
+    borderSide: const BorderSide(color: PB.rose, width: 1.5),
+  ),
+  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+);
 
 class _FieldLabel extends StatelessWidget {
   const _FieldLabel(this.text);

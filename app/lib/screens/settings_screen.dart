@@ -199,7 +199,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         const SizedBox(height: 4),
         const Center(
           child: Text(
-            'PeriBuds · Made with care · v1.1.0',
+            'PeriBuds · Made with care · v1.1.2',
             style: TextStyle(fontSize: 10, color: PB.muted),
           ),
         ),

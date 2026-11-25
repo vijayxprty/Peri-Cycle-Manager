@@ -50,8 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final dayOfCycle = state.dayOfCycle;
     final phase = state.currentPhase;
     final meals = state.mealsForDay(today);
-    final doneCount =
-        meals.where((m) => state.isMealDone(today, m.id)).length;
+    final doneCount = meals.where((m) => state.isMealDone(today, m.id)).length;
     final overlapping = state.overlappingTrips;
 
     return ListView(
@@ -93,11 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Color(0xFFFBD9D6),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.favorite,
-                  color: PB.rose,
-                  size: 20,
-                ),
+                child: const Icon(Icons.favorite, color: PB.rose, size: 20),
               ),
             ),
           ],
@@ -147,10 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 9,
-                        ),
+                        border: Border.all(color: Colors.white, width: 9),
                       ),
                       alignment: Alignment.center,
                       child: SizedBox(
@@ -163,8 +155,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               // "15" + "days late", never "-15 days to go".
                               hasData && daysToGo != null
                                   ? (state.isOverdue
-                                      ? '${state.daysLate}'
-                                      : '$daysToGo')
+                                        ? '${state.daysLate}'
+                                        : '$daysToGo')
                                   : '—',
                               textAlign: TextAlign.center,
                               style: const TextStyle(
@@ -178,8 +170,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             Text(
                               hasData
                                   ? (state.isOverdue
-                                      ? 'days late'
-                                      : 'days to go')
+                                        ? 'days late'
+                                        : 'days to go')
                                   : 'log your first\nperiod',
                               textAlign: TextAlign.center,
                               style: const TextStyle(
@@ -375,18 +367,48 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
 
         // Wellbeing additions. Existing cycle, calendar, and meal flows stay.
+        const SizedBox(height: 12),
         PBCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Today’s wellbeing', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
-              const Text('Movement & hydration', style: TextStyle(fontSize: 12, color: PB.muted)),
+              const Text(
+                'Today’s wellbeing',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+              ),
+              const Text(
+                'Movement & hydration',
+                style: TextStyle(fontSize: 12, color: PB.muted),
+              ),
               const SizedBox(height: 10),
-              Row(children: [
-                Expanded(child: _WellbeingTile(icon: Icons.directions_walk, title: 'Steps', value: '${state.stepCount}', detail: 'of ${state.stepGoal} · ~${state.stepCaloriesEstimate.round()} kcal', color: PB.roseSoft, onTap: widget.onGoToSteps)),
-                const SizedBox(width: 10),
-                Expanded(child: _WellbeingTile(icon: Icons.water_drop_outlined, title: 'Water', value: '${(state.waterTodayMl / 1000).toStringAsFixed(2)} L', detail: 'of ${(state.waterGoalMl / 1000).toStringAsFixed(1)} L goal', color: const Color(0xFFEAF6FB), onTap: widget.onGoToWater)),
-              ]),
+              Row(
+                children: [
+                  Expanded(
+                    child: _WellbeingTile(
+                      icon: Icons.directions_walk,
+                      title: 'Steps',
+                      value: '${state.stepCount}',
+                      detail:
+                          'of ${state.stepGoal} · ~${state.stepCaloriesEstimate.round()} kcal',
+                      color: PB.roseSoft,
+                      onTap: widget.onGoToSteps,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _WellbeingTile(
+                      icon: Icons.water_drop_outlined,
+                      title: 'Water',
+                      value:
+                          '${(state.waterTodayMl / 1000).toStringAsFixed(2)} L',
+                      detail:
+                          'of ${(state.waterGoalMl / 1000).toStringAsFixed(1)} L goal',
+                      color: const Color(0xFFEAF6FB),
+                      onTap: widget.onGoToWater,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -569,11 +591,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               else
                 ...meals.map(
-                  (m) => _MealRow(
-                    state: state,
-                    day: today,
-                    meal: m,
-                  ),
+                  (m) => _MealRow(state: state, day: today, meal: m),
                 ),
               const SizedBox(height: 12),
               DashedButton(
@@ -821,31 +839,77 @@ String _todayNote(AppState state, DateTime today) {
 }
 
 class _WellbeingTile extends StatelessWidget {
-  const _WellbeingTile({required this.icon, required this.title, required this.value, required this.detail, required this.color, required this.onTap});
+  const _WellbeingTile({
+    required this.icon,
+    required this.title,
+    required this.value,
+    required this.detail,
+    required this.color,
+    required this.onTap,
+  });
   final IconData icon;
   final String title, value, detail;
   final Color color;
   final VoidCallback onTap;
   @override
   Widget build(BuildContext context) => Material(
-        color: color,
-        borderRadius: BorderRadius.circular(18),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(18),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [Icon(icon, size: 17, color: title == 'Water' ? const Color(0xFF418BB5) : PB.rose), const SizedBox(width: 6), Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: PB.softText))]),
-              const SizedBox(height: 8),
-              Text(value, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w800, color: PB.ink)),
-              Text(detail, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 9, color: PB.softText)),
-              const SizedBox(height: 6),
-              Text(title == 'Water' ? 'Log water ›' : 'View steps ›', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: PB.rose)),
-            ]),
-          ),
+    color: color,
+    borderRadius: BorderRadius.circular(18),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(18),
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  icon,
+                  size: 17,
+                  color: title == 'Water' ? const Color(0xFF418BB5) : PB.rose,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    color: PB.softText,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 21,
+                fontWeight: FontWeight.w800,
+                color: PB.ink,
+              ),
+            ),
+            Text(
+              detail,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 9, color: PB.softText),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              title == 'Water' ? 'Log water ›' : 'View steps ›',
+              style: const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                color: PB.rose,
+              ),
+            ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 }
 
 class _HeroChip extends StatelessWidget {
@@ -933,8 +997,8 @@ class _PhaseBar extends StatelessWidget {
             final align = i == 0
                 ? MainAxisAlignment.start
                 : i == 3
-                    ? MainAxisAlignment.end
-                    : MainAxisAlignment.center;
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.center;
             return Expanded(
               flex: flexes[i],
               child: Row(
@@ -957,8 +1021,7 @@ class _PhaseBar extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 12,
-                        fontWeight:
-                            on ? FontWeight.w800 : FontWeight.w600,
+                        fontWeight: on ? FontWeight.w800 : FontWeight.w600,
                         color: on ? PB.rose : PB.softText,
                       ),
                     ),
@@ -1064,9 +1127,7 @@ class _FoodProgress extends StatelessWidget {
           widthFactor: f,
           child: Container(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [PB.rose, Color(0xFF5E9C7A)],
-              ),
+              gradient: LinearGradient(colors: [PB.rose, Color(0xFF5E9C7A)]),
             ),
           ),
         ),
@@ -1102,9 +1163,7 @@ class _MealRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final done = state.isMealDone(day, meal.id);
     final (bg, fg) = _tile();
-    final letter = meal.type.isNotEmpty
-        ? meal.type[0].toUpperCase()
-        : '•';
+    final letter = meal.type.isNotEmpty ? meal.type[0].toUpperCase() : '•';
     return GestureDetector(
       onTap: () => state.toggleMealDone(day, meal.id),
       behavior: HitTestBehavior.opaque,
@@ -1146,9 +1205,7 @@ class _MealRow extends StatelessWidget {
                         children: [
                           TextSpan(
                             text: meal.title,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                            ),
+                            style: const TextStyle(fontWeight: FontWeight.w700),
                           ),
                           TextSpan(
                             text: ' · ${to12h(meal.time24)}',
@@ -1163,10 +1220,7 @@ class _MealRow extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       meal.description,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: PB.softText,
-                      ),
+                      style: const TextStyle(fontSize: 13, color: PB.softText),
                     ),
                   ],
                 ),
