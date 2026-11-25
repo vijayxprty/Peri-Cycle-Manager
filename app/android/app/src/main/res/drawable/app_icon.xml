@@ -1,30 +1,4 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-    <path android:fillColor="#7554DD" android:pathData="M0,0h108v108h-108z" />
-
-    <!-- Outer rose petals -->
-    <path
-        android:fillColor="#C7BBF5"
-        android:pathData="M54,24 C45,23 40,29 41,37 C32,32 24,38 27,47 C18,49 18,59 26,64 C21,72 27,80 36,78 C40,87 51,87 56,79 C62,86 73,82 73,73 C82,70 83,60 76,55 C81,46 75,38 66,39 C65,30 60,25 54,24 Z" />
-
-    <!-- Distinct overlapping petals create the rose silhouette -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M53,30 C46,29 42,35 44,42 C37,39 31,44 34,51 C27,55 30,63 37,65 C34,72 40,78 47,74 C51,81 59,79 61,72 C69,75 74,69 70,63 C78,58 75,50 68,49 C71,41 65,36 59,39 C59,33 56,30 53,30 Z" />
-
-    <!-- Inner cupped petals -->
-    <path
-        android:fillColor="#E6DFFF"
-        android:pathData="M53,39 C47,38 44,43 47,48 C40,46 37,52 42,57 C38,62 42,67 48,65 C49,72 56,73 59,67 C66,69 70,63 66,58 C72,53 68,47 62,48 C63,42 58,39 54,43 Z" />
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M53,45 C48,46 47,51 51,54 C47,58 49,63 54,64 C58,64 61,60 59,56 C64,52 60,46 56,48 C55,46 54,45 53,45 Z" />
-
-    <!-- Short curled rosebud center, intentionally compact -->
-    <path
-        android:fillColor="#7554DD"
-        android:pathData="M54,50 C58,49 61,52 60,55 C59,58 55,59 53,57 C52,56 53,54 55,54 C56,54 57,55 57,56 C59,55 58,52 55,52 C53,52 52,53 51,55 C50,53 51,51 54,50 Z" />
-</vector>
+<?xml version="1.0" encoding="utf-8"?>
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/peri_buds_icon"
+    android:gravity="fill" />
